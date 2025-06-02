@@ -16,10 +16,10 @@ jobs:
         path: node_modules
         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-    - name: Use Node.js v22.14.0
+    - name: Use Node.js v20.x
       uses: actions/setup-node@v3
       with:
-        node-version: v22.14.0
+        node-version: v20.x
 
     - name: Install dependencies
       run: yarn install

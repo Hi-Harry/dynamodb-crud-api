@@ -2,7 +2,7 @@ service: dynamodb-crud-api
 
 provider:
   name: aws
-  runtime: nodejs22.14.0
+  runtime: nodejs20.x
   stage: dev
   region: us-west-1
   environment:
