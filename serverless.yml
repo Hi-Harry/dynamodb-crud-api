@@ -1,13 +1,13 @@
 service: dynamodb-crud-api
 
-provider: 
+provider:
   name: aws
-  runtime: nodejs22.14.0
+  runtime: nodejs14.x
   stage: dev
-  region: ap-south-1
-  environmnet:
+  region: us-west-1
+  environment:
     DYNAMODB_TABLE_NAME: ${self:custom.postsTableName}
-  
+
 custom:
   postsTableName: posts-table-${self:provider.stage}
 
@@ -18,8 +18,8 @@ functions:
   getPost:
     handler: api.getPost
     name: get-post
-    memorySize: 128 #mb
-    timeout: 5 #seconds
+    memorySize: 128 # mb
+    timeout: 5 # seconds
     events:
       - http:
           path: post/{postId}
@@ -32,8 +32,8 @@ functions:
   createPost:
     handler: api.createPost
     name: create-post
-    memorySize: 128 #mb
-    timeout: 5 #seconds
+    memorySize: 128 # mb
+    timeout: 5 # seconds
     events:
       - http:
           path: post
@@ -43,11 +43,11 @@ functions:
         Action:
           - "dynamodb:PutItem"
         Resource: !GetAtt PostsTable.Arn
-  UpdatePost:
-    handler: api.UpdatePost
+  updatePost:
+    handler: api.updatePost
     name: update-post
-    memorySize: 128 #mb
-    timeout: 5 #seconds
+    memorySize: 128 # mb
+    timeout: 5 # seconds
     events:
       - http:
           path: post/{postId}
@@ -60,8 +60,8 @@ functions:
   deletePost:
     handler: api.deletePost
     name: delete-post
-    memorySize: 128 #mb
-    timeout: 5 #seconds
+    memorySize: 128 # mb
+    timeout: 5 # seconds
     events:
       - http:
           path: post/{postId}
@@ -71,11 +71,11 @@ functions:
         Action:
           - "dynamodb:DeleteItem"
         Resource: !GetAtt PostsTable.Arn
-  getAllPost:
-    handler: api.getAllPost
-    name: get-all-post
-    memorySize: 128 #mb
-    timeout: 5 #seconds
+  getAllPosts:
+    handler: api.getAllPosts
+    name: get-all-posts
+    memorySize: 128 # mb
+    timeout: 5 # seconds
     events:
       - http:
           path: posts
@@ -92,13 +92,12 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.postsTableName}
-      AttributeDefinitions:
-        - AttributeName: postId
-          AttributeType: S
-      KeySchema:
-        - AttributeName: postId
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
-  
+        AttributeDefinitions:
+          - AttributeName: postId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: postId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
