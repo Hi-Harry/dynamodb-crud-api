@@ -2,14 +2,15 @@ service: dynamodb-crud-api
 
 provider: 
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs22.14.0
   stage: dev
   region: ap-south-1
-  environment: 
+  environmnet:
     DYNAMODB_TABLE_NAME: ${self:custom.postsTableName}
   
 custom:
-  postsTableName: posts-table-${self:provider.stage} 
+  postsTableName: posts-table-${self:provider.stage}
+
 plugins:
   - serverless-iam-roles-per-function
 
@@ -27,8 +28,7 @@ functions:
       - Effect: "Allow"
         Action:
           - "dynamodb:GetItem"
-        Resource: !GetAtt PostsTable.Arn 
-
+        Resource: !GetAtt PostsTable.Arn
   createPost:
     handler: api.createPost
     name: create-post
@@ -42,9 +42,8 @@ functions:
       - Effect: "Allow"
         Action:
           - "dynamodb:PutItem"
-        Resource: !GetAtt PostsTable.Arn 
-
-  updatePost: 
+        Resource: !GetAtt PostsTable.Arn
+  UpdatePost:
     handler: api.UpdatePost
     name: update-post
     memorySize: 128 #mb
@@ -57,8 +56,7 @@ functions:
       - Effect: "Allow"
         Action:
           - "dynamodb:UpdateItem"
-        Resource: !GetAtt PostsTable.Arn 
-
+        Resource: !GetAtt PostsTable.Arn
   deletePost:
     handler: api.deletePost
     name: delete-post
@@ -72,8 +70,7 @@ functions:
       - Effect: "Allow"
         Action:
           - "dynamodb:DeleteItem"
-        Resource: !GetAtt PostsTable.Arn 
-
+        Resource: !GetAtt PostsTable.Arn
   getAllPost:
     handler: api.getAllPost
     name: get-all-post
@@ -87,21 +84,21 @@ functions:
       - Effect: "Allow"
         Action:
           - "dynamodb:Scan"
-        Resource: !GetAtt PostsTable.Arn 
+        Resource: !GetAtt PostsTable.Arn
 
-resources: 
+resources:
   Resources:
     PostsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.postsTableName}
-        AttributeDefinitions:
-          - AttributeName: postId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: postId
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+      AttributeDefinitions:
+        - AttributeName: postId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: postId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
   
